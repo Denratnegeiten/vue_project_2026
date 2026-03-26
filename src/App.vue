@@ -11,11 +11,14 @@
           </v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
+      
       <v-divider></v-divider>
+      
       <v-list dense>
         <v-list-item
           v-for="link in links"
           :key="link.title"
+          :to="link.url"
         >
           <template v-slot:prepend>
             <v-icon :icon="link.icon"></v-icon>
@@ -24,6 +27,7 @@
         </v-list-item>
       </v-list>
     </v-navigation-drawer>
+    
     <v-app-bar app dark color="primary">
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       <v-spacer></v-spacer>
@@ -32,6 +36,7 @@
           text
           v-for="link in links"
           :key="link.title"
+          :to="link.url"
         >
           <v-icon
             start
