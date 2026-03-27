@@ -35,15 +35,22 @@
         <v-row>
           <v-col cols="12">
             <v-card-actions>
-              <v-spacer></v-spacer>
-              <v-btn @click="onCancel">Close</v-btn>
-              <v-btn
-                color="success"
+            <v-spacer></v-spacer>
+            <v-btn 
+                text 
+                @click="onCancel" 
+                :disabled="localLoading"
+            >
+                Close
+            </v-btn>
+            <v-btn 
+                color="success" 
                 @click="onSave"
-                :disabled="name === '' || phone === ''"
-                >
+                :disabled="localLoading"
+                :loading="localLoading"
+            >
                 Buy it!
-                </v-btn>
+            </v-btn>
             </v-card-actions>
           </v-col>
         </v-row>
@@ -57,11 +64,12 @@ export default {
   props: ['ad'],
   data () {
     return {
-      modal: false,
-      name: '',
-      phone: ''
+        modal: false,
+        name: "",
+        phone: "",
+        localLoading: false
     }
-  },
+    },
   methods: {
     onCancel () {
       this.name = ''
@@ -70,6 +78,7 @@ export default {
     },
     onSave () {
     if (this.name !== '' && this.phone !== '') {
+        this.localLoading = true
         this.$store.dispatch('createOrder', {
         name: this.name,
         phone: this.phone,
@@ -77,6 +86,7 @@ export default {
         userId: this.ad.userId
         })
         .finally(() => {
+        this.localLoading = false
         this.name = ""
         this.phone = ""
         this.modal = false
