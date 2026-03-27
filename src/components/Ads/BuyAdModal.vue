@@ -37,7 +37,13 @@
             <v-card-actions>
               <v-spacer></v-spacer>
               <v-btn @click="onCancel">Close</v-btn>
-              <v-btn color="success" @click="onSave">Buy it!</v-btn>
+              <v-btn
+                color="success"
+                @click="onSave"
+                :disabled="name === '' || phone === ''"
+                >
+                Buy it!
+                </v-btn>
             </v-card-actions>
           </v-col>
         </v-row>
@@ -64,7 +70,9 @@ export default {
     },
     onSave () {
       if (this.name !== '' && this.phone !== '') {
-        // Логику сохранения добавим в 18.3
+        console.log(this.name, this.phone, this.ad.id) // Для теста в консоли
+        this.name = ''
+        this.phone = ''
         this.modal = false
       }
     }
