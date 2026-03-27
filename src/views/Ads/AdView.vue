@@ -4,17 +4,18 @@
       <v-col cols="12">
         <v-card class="mt-5">
           <v-img
-            src="https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
-            height="300px"
+            height="400px"
+            :src="ad.src"
+            cover
           ></v-img>
           <v-card-text>
-            <h1 class="text--primary">{{ ad.title }}</h1>
+            <h1 class="text--primary mb-3">{{ ad.title }}</h1>
             <p>{{ ad.desc }}</p>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <v-btn class="warning" variant="text">Edit</v-btn>
-            <v-btn class="success">Buy</v-btn>
+            <v-btn class="warning" color="orange">Edit</v-btn>
+            <v-btn class="success" color="green">Buy</v-btn>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -24,14 +25,15 @@
 
 <script>
 export default {
-  data () {
-    return {
-      ad: {
-        title: 'First ad',
-        desc: 'Hello I am description',
-        id: '123'
-      }
+  data() {
+    return {};
+  },
+  props: ['id'],
+  computed: {
+    ad() {
+      const id = this.id
+      return this.$store.getters.adById(id)
     }
   }
-}
+};
 </script>
