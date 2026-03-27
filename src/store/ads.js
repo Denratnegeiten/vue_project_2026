@@ -49,6 +49,13 @@ export default {
   mutations: {
     createAd(state, payload) {
       state.ads.push(payload)
+    },
+    updateAd (state, {title, description, id}) {
+      const ad = state.ads.find(a => {
+        return a.id === id
+      })
+      ad.title = title
+      ad.description = description
     }
   },
   actions: {
@@ -63,6 +70,19 @@ export default {
         payload.id
       )
       commit('createAd', newAd)
+    },
+    async updateAd ({commit}, {title, description, id}) {
+      commit('clearError')
+      commit('setLoading', true)
+      try {
+        // Здесь в будущем будет запрос к серверу
+        commit('updateAd', {title, description, id})
+        commit('setLoading', false)
+      } catch (error) {
+        commit('setError', error.message)
+        commit('setLoading', false)
+        throw error
+      }
     }
   },
   getters: {
