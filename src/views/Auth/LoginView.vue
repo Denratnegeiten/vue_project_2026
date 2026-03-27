@@ -32,7 +32,8 @@
             <v-btn
               color="primary"
               @click="onSubmit"
-              :disabled="!valid"
+              :loading="loading"
+              :disabled="!valid || loading"
             >
               Login
             </v-btn>
@@ -58,6 +59,11 @@ export default {
         v => !!v || 'Password is required',
         v => (v && v.length >= 6) || 'Password must be more or equel than 6 characters'
       ]
+    }
+  },
+  computed: {
+    loading () {
+      return this.$store.getters.loading
     }
   },
   methods: {
