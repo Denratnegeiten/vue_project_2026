@@ -63,6 +63,41 @@ app.post('/api/auth/login', async (req, res) => {
   }
 });
 
+app.post('/api/ads', (req, res) => {
+  console.log('--- Получен запрос на создание ---');
+  console.log('Тело запроса:', req.body);
+
+  const title = req.body.title || 'Без названия';
+  const description = req.body.description || '';
+  const ownerId = req.body.ownerId || null;
+  const imageSrc = req.body.imageSrc || '';
+  const promo = req.body.promo ? 1 : 0;
+
+  if (!ownerId) {
+    console.error('ОШИБКА: ownerId не получен!');
+    return res.status(400).json({ error: 'Необходима авторизация (ownerId is missing)' });
+  }
+
+  const query = 'INSERT INTO ads (title, description, ownerId, imageSrc, promo) VALUES (?, ?, ?, ?, ?)';
+  const values = [title, description, ownerId, imageSrc, promo];
+
+  db.execute(query, values, (err, result) => {
+    if (err) {
+      console.error('Ошибка MySQL:', err.message);
+      return res.status(500).json({ error: err.message });
+    }
+    console.log('Успех! Объявление создано с ID:', result.insertId);
+    res.status(201).json({ message: 'Объявление создано', id: result.insertId });
+  });
+});
+
+app.get('/api/ads', (req, res) => {
+  db.execute('SELECT * FROM ads', (err, results) => {
+    if (err) return res.status(500).json({ error: err.message });
+    res.json(results);
+  });
+});
+
 const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
   console.log(`Сервер запущен локально на порту ${PORT}`);

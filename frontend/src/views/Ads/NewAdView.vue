@@ -10,61 +10,36 @@
             label="Ad Title"
             type="text"
             v-model="title"
-            :rules="[(v) => !!v || 'Title is required']"
-          >
-          </v-text-field>
+            required
+            :rules="[v => !!v || 'Title is required']"
+          ></v-text-field>
+
+          <v-text-field
+            label="Image URL"
+            name="imageSrc"
+            type="text"
+            v-model="imageSrc"
+          ></v-text-field>
+
           <v-textarea
             name="description"
             label="Ad Description"
-            type="text"
             v-model="description"
-            :rules="[(v) => !!v || 'Description is required']"
+            :rules="[v => !!v || 'Description is required']"
             class="mb-3"
           ></v-textarea>
+
+          <v-switch v-model="promo" label="Add to Promo?"></v-switch>
+
+          <v-btn
+            :loading="loading"
+            :disabled="!valid || loading"
+            color="primary"
+            @click="createAd"
+          >
+            Create Ad
+          </v-btn>
         </v-form>
-
-        <v-row>
-          <v-col cols="12">
-            <v-btn class="mt-3" color="warning">
-              Upload
-              <v-icon right dark>mdi-cloud-upload</v-icon>
-            </v-btn>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12">
-            <img
-              src="https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
-              height="150"
-              class="mt-3"
-            />
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12">
-            <v-switch 
-              v-model="promo" 
-              label="Ad to Promo?"
-            ></v-switch>
-          </v-col>
-        </v-row>
-
-        <v-row>
-          <v-col cols="12">
-            <v-spacer></v-spacer>
-            <v-btn
-              :loading="loading"
-              :disabled="!valid || loading"
-              color="primary"
-              @click="createAd"
-            >
-              Create Ad
-            </v-btn>
-          </v-col>
-        </v-row>
-
       </v-col>
     </v-row>
   </v-container>
@@ -77,7 +52,8 @@ export default {
       valid: false,
       title: "",
       description: "",
-      promo: true
+      imageSrc: "",
+      promo: false
     }
   },
   computed: {
@@ -90,12 +66,16 @@ export default {
       if (this.$refs.form.validate()) {
         const ad = {
           title: this.title,
-          description: this.description,
+          desc: this.description,
           promo: this.promo,
-          imageSrc: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
+          src: this.imageSrc || "https://picsum.photos/400/300"
         }
+
         this.$store.dispatch("createAd", ad)
-        this.$router.push("/")
+          .then(() => {
+            this.$router.push("/ads")
+          })
+          .catch(() => {})
       }
     }
   }

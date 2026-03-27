@@ -113,6 +113,9 @@ export default {
       ]
     }
   },
+  created() {
+    this.$store.dispatch('fetchAds')
+  },
   methods: {
     closeError () {
       this.$store.dispatch('clearError')
