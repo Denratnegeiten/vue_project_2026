@@ -5,16 +5,16 @@
         <v-card class="mt-5">
           <v-img
             height="400px"
-            :src="ad.src"
+            :src="ad.imageSrc"
             cover
           ></v-img>
           <v-card-text>
             <h1 class="text--primary mb-3">{{ ad.title }}</h1>
-            <p>{{ ad.desc }}</p>
+            <p>{{ ad.description }}</p>
           </v-card-text>
           <v-card-actions>
             <v-spacer></v-spacer>
-            <add-edit-ad-modal :ad="ad"></add-edit-ad-modal>
+            <add-edit-ad-modal :ad="ad" v-if="isOwner"></add-edit-ad-modal>
             <v-btn color="primary" variant="elevated">Buy</v-btn>
           </v-card-actions>
         </v-card>
@@ -32,6 +32,10 @@ export default {
     ad () {
       const id = this.id
       return this.$store.getters.adById(id)
+    },
+    isOwner () {
+      // Проверка: залогинен ли юзер и является ли он автором
+      return this.$store.getters.isUserLoggedIn && this.ad.ownerId === this.$store.getters.user.id
     }
   },
   components: {
