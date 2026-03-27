@@ -15,7 +15,7 @@
           <v-card-actions>
             <v-spacer></v-spacer>
             <add-edit-ad-modal :ad="ad" v-if="isOwner"></add-edit-ad-modal>
-            <v-btn color="primary" variant="elevated">Buy</v-btn>
+            <app-buy-modal :ad="ad"></app-buy-modal>
           </v-card-actions>
         </v-card>
       </v-col>
@@ -25,6 +25,7 @@
 
 <script>
 import EditAdModal from '@/components/Ads/EditAdModal.vue'
+import BuyAdModal from '@/components/Ads/BuyAdModal.vue'
 
 export default {
   props: ['id'],
@@ -39,7 +40,8 @@ export default {
     }
   },
   components: {
-    addEditAdModal: EditAdModal
+    addEditAdModal: EditAdModal,
+    appBuyModal: BuyAdModal
   }
 }
 </script>
