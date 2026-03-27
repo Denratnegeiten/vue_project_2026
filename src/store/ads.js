@@ -1,9 +1,9 @@
 class Ad {
-  constructor (title, description, ownerId, imageSrc = '', promo = false, id = null) {
+  constructor (title, desc, ownerId, src = '', promo = false, id = null) {
     this.title = title
-    this.description = description
+    this.desc = desc
     this.ownerId = ownerId
-    this.imageSrc = imageSrc
+    this.src = src
     this.promo = promo
     this.id = id
   }
@@ -14,33 +14,33 @@ export default {
     ads: [
       {
         title: "First",
-        description: "First Desc",
+        desc: "First Desc",
         ownerId: "user-123",
-        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+        src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
         promo: true,
         id: "1"
       },
       {
         title: "Second",
-        description: "Second Desc",
+        desc: "Second Desc",
         ownerId: "user-123",
-        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
+        src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
         promo: true,
         id: "2"
       },
       {
         title: "Third",
-        description: "Thitd Desc",
+        desc: "Third Desc",
         ownerId: "user-456",
-        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
+        src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
         promo: true,
         id: "3"
       },
       {
-        title: "Fouth",
-        description: "Fouth Desc",
+        title: "Fourth",
+        desc: "Fourth Desc",
         ownerId: "user-456",
-        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
+        src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
         promo: true,
         id: "4"
       }
@@ -50,12 +50,12 @@ export default {
     createAd(state, payload) {
       state.ads.push(payload)
     },
-    updateAd (state, {title, description, id}) {
+    updateAd (state, {title, desc, id}) {
       const ad = state.ads.find(a => {
         return a.id === id
       })
       ad.title = title
-      ad.description = description
+      ad.desc = desc
     }
   },
   actions: {
@@ -63,20 +63,19 @@ export default {
       payload.id = Math.random().toString()
       const newAd = new Ad(
         payload.title,
-        payload.description,
+        payload.desc,
         getters.user.id,
-        payload.imageSrc,
+        payload.src,
         payload.promo,
         payload.id
       )
       commit('createAd', newAd)
     },
-    async updateAd ({commit}, {title, description, id}) {
+    async updateAd ({commit}, {title, desc, id}) {
       commit('clearError')
       commit('setLoading', true)
       try {
-        // Здесь в будущем будет запрос к серверу
-        commit('updateAd', {title, description, id})
+        commit('updateAd', {title, desc, id})
         commit('setLoading', false)
       } catch (error) {
         commit('setError', error.message)
@@ -94,9 +93,11 @@ export default {
         return ad.promo
       })
     },
-    myAds (state, getters) {
+    myAds(state, getters) {
+      if (getters.user === null) return [] 
+      
       return state.ads.filter(ad => {
-        return ad.ownerId === getters.user.id
+        return ad.userId == getters.user.id
       })
     },
     adById(state) {

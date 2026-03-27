@@ -4,13 +4,8 @@ import user from './user'
 import shared from './shared'
 import order from './order'
 
-const store = createStore({
+export default createStore({
   modules: {
-    ads, 
-    user, 
-    shared, 
-    order
+    ads, user, shared, order
   }
 })
-
-export default store
