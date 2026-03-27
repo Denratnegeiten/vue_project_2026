@@ -52,9 +52,17 @@ export default {
     }
   },
   actions: {
-    createAd({commit}, payload) {
+    createAd ({commit, getters}, payload) {
       payload.id = Math.random().toString()
-      commit('createAd', payload)
+      const newAd = new Ad(
+        payload.title,
+        payload.description,
+        getters.user.id,
+        payload.imageSrc,
+        payload.promo,
+        payload.id
+      )
+      commit('createAd', newAd)
     }
   },
   getters: {
