@@ -1,4 +1,5 @@
 import { createRouter, createWebHistory } from 'vue-router'
+import store from '../store'
 import HomeView from '../views/HomeView.vue'
 import AdListView from '../views/Ads/AdListView.vue'
 import AdView from '../views/Ads/AdView.vue'
@@ -6,6 +7,14 @@ import NewAdView from '../views/Ads/NewAdView.vue'
 import LoginView from '../views/Auth/LoginView.vue'
 import RegistrationView from '../views/Auth/RegistrationView.vue'
 import OrdersView from '../views/User/OrdersView.vue'
+
+const authGuard = (to, from, next) => {
+  if (store.getters.isUserLoggedIn) {
+    next()
+  } else {
+    next('/login?loginError=true')
+  }
+}
 
 const routes = [
   {
@@ -22,12 +31,14 @@ const routes = [
   {
     path: '/list',
     name: 'list',
-    component: AdListView
+    component: AdListView,
+    beforeEnter: authGuard
   },
   {
     path: '/new',
     name: 'newAd',
-    component: NewAdView
+    component: NewAdView,
+    beforeEnter: authGuard
   },
   {
     path: '/login',
@@ -42,7 +53,8 @@ const routes = [
   {
     path: '/orders',
     name: 'orders',
-    component: OrdersView
+    component: OrdersView,
+    beforeEnter: authGuard
   }
 ]
 
