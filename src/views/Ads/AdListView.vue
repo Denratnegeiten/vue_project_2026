@@ -6,24 +6,24 @@
 
         <v-card 
           class="elevation-10 mb-3" 
-          v-for="i in 3" 
-          :key="i"
+          v-for="ad in ads" 
+          :key="ad.id"
         >
           <v-row no-gutters>
             <v-col cols="4">
               <v-img
-                src="https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg"
+                :src="ad.src"
                 height="160px"
               ></v-img>
             </v-col>
             <v-col cols="8">
               <v-card-text>
-                <h2 class="text--primary">Ad Title</h2>
-                <p>Ad Description. Lorem ipsum dolor sit amet, consectetur adipiscing elit.</p>
+                <h2 class="text--primary">{{ ad.title }}</h2>
+                <p>{{ ad.desc }}</p>
               </v-card-text>
               <v-card-actions>
                 <v-spacer></v-spacer>
-                <v-btn class="info" to="/ad/1">Open</v-btn>
+                <v-btn class="info" :to="'/ad/' + ad.id">Open</v-btn>
               </v-card-actions>
             </v-col>
           </v-row>
@@ -38,6 +38,22 @@
 export default {
   data () {
     return {
+      ads: [
+        {
+          title: "First",
+          desc: "First Desc",
+          promo: true,
+          src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
+          id: "1"
+        },
+        {
+          title: "Second",
+          desc: "Second Desc",
+          promo: true,
+          src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
+          id: "2"
+        }
+      ]
     }
   }
 }
