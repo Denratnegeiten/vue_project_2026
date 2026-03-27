@@ -69,12 +69,19 @@ export default {
       this.modal = false
     },
     onSave () {
-      if (this.name !== '' && this.phone !== '') {
-        console.log(this.name, this.phone, this.ad.id) // Для теста в консоли
-        this.name = ''
-        this.phone = ''
+    if (this.name !== '' && this.phone !== '') {
+        this.$store.dispatch('createOrder', {
+        name: this.name,
+        phone: this.phone,
+        adId: this.ad.id,
+        userId: this.ad.userId
+        })
+        .finally(() => {
+        this.name = ""
+        this.phone = ""
         this.modal = false
-      }
+        })
+    }
     }
   }
 }
