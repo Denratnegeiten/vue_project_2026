@@ -64,7 +64,11 @@ export default {
     },
     onSave () {
       if (this.editedTitle !== '' && this.editedDescription !== '') {
-        // Логику сохранения добавим в 17.4
+        this.$store.dispatch('updateAd', {
+          title: this.editedTitle,
+          description: this.editedDescription,
+          id: this.ad.id
+        })
         this.modal = false
       }
     }
