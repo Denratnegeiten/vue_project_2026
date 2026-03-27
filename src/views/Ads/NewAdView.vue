@@ -86,18 +86,15 @@ export default {
     }
   },
   methods: {
-    createAd(){
-      if (this.$refs.form.validate()){
+    createAd () {
+      if (this.$refs.form.validate()) {
         const ad = {
           title: this.title,
-          desc: this.description,
+          description: this.description,
           promo: this.promo,
-          src: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
+          imageSrc: "https://cdn.vuetifyjs.com/images/cards/cooking.png"
         }
-        // Отправляем данные в Store [cite: 2066]
         this.$store.dispatch("createAd", ad)
-        
-        // После создания переходим на главную страницу 
         this.$router.push("/")
       }
     }
