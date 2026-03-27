@@ -3,12 +3,8 @@
     <v-navigation-drawer app v-model="drawer">
       <v-list-item>
         <v-list-item-content>
-          <v-list-item-title class="title">
-            КИПУ
-          </v-list-item-title>
-          <v-list-item-subtitle>
-            Учебный проект
-          </v-list-item-subtitle>
+          <v-list-item-title class="title">КИПУ</v-list-item-title>
+          <v-list-item-subtitle>Учебный проект</v-list-item-subtitle>
         </v-list-item-content>
       </v-list-item>
       
@@ -25,6 +21,16 @@
           </template>
           <v-list-item-title>{{ link.title }}</v-list-item-title>
         </v-list-item>
+
+        <v-list-item
+          v-if="isUserLoggedIn"
+          @click="onLogout"
+        >
+          <template v-slot:prepend>
+            <v-icon icon="mdi-exit-to-app"></v-icon>
+          </template>
+          <v-list-item-title>Logout</v-list-item-title>
+        </v-list-item>
       </v-list>
     </v-navigation-drawer>
     
@@ -32,41 +38,48 @@
       <v-app-bar-nav-icon @click="drawer = !drawer"></v-app-bar-nav-icon>
       
       <v-toolbar-title>
-        <v-btn to="/">
-          Home
-        </v-btn>
+        <v-btn to="/" variant="text">Home</v-btn>
       </v-toolbar-title>
       
       <v-spacer></v-spacer>
       
       <v-toolbar-items class="hidden-sm-and-down">
         <v-btn
-          text
+          variant="text"
           v-for="link in links"
           :key="link.title"
           :to="link.url"
         >
-          <v-icon
-            start
-            :icon="link.icon"
-          ></v-icon>
+          <v-icon start :icon="link.icon"></v-icon>
           {{ link.title }}
+        </v-btn>
+
+        <v-btn
+          v-if="isUserLoggedIn"
+          @click="onLogout"
+          variant="text"
+        >
+          <v-icon start icon="mdi-exit-to-app"></v-icon>
+          Logout
         </v-btn>
       </v-toolbar-items>
     </v-app-bar>
+
     <v-main>
       <router-view></router-view>
     </v-main>
+
     <template v-if="error">
       <v-snackbar
         :timeout="5000"
-        :multi-line="true"
         color="error"
-        @input="closeError"
-        :value="true"
+        @update:modelValue="closeError"
+        :model-value="true"
       >
         {{ error }}
-        <v-btn text color="white" @click.native="closeError">Close</v-btn>
+        <template v-slot:actions>
+          <v-btn color="white" variant="text" @click="closeError">Close</v-btn>
+        </template>
       </v-snackbar>
     </template>
   </v-app>
@@ -103,6 +116,10 @@ export default {
   methods: {
     closeError () {
       this.$store.dispatch('clearError')
+    },
+    onLogout () {
+      this.$store.dispatch('logoutUser')
+      this.$router.push('/')
     }
   }
 }

@@ -60,6 +60,9 @@ export default {
           throw 'Упс... Ошибка логина'
         })
       }
+    },
+    logoutUser ({commit}) {
+      commit('setUser', null)
     }
   },
   getters: {
