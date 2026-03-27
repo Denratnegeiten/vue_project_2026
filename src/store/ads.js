@@ -1,32 +1,47 @@
+class Ad {
+  constructor (title, description, ownerId, imageSrc = '', promo = false, id = null) {
+    this.title = title
+    this.description = description
+    this.ownerId = ownerId
+    this.imageSrc = imageSrc
+    this.promo = promo
+    this.id = id
+  }
+}
+
 export default {
   state: {
     ads: [
       {
         title: "First",
-        desc: "First Desc",
+        description: "First Desc",
+        ownerId: "user-123",
+        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
         promo: true,
-        src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
         id: "1"
       },
       {
         title: "Second",
-        desc: "Second Desc",
+        description: "Second Desc",
+        ownerId: "user-123",
+        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
         promo: true,
-        src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
         id: "2"
       },
       {
         title: "Third",
-        desc: "Thitd Desc",
+        description: "Thitd Desc",
+        ownerId: "user-456",
+        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
         promo: true,
-        src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
         id: "3"
       },
       {
         title: "Fouth",
-        desc: "Fouth Desc",
+        description: "Fouth Desc",
+        ownerId: "user-456",
+        imageSrc: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
         promo: true,
-        src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
         id: "4"
       }
     ]
@@ -38,7 +53,7 @@ export default {
   },
   actions: {
     createAd({commit}, payload) {
-      payload.id = Math.random().toString() // Генерируем временный ID
+      payload.id = Math.random().toString()
       commit('createAd', payload)
     }
   },
