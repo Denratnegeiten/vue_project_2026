@@ -1,19 +1,21 @@
 {
   "compilerOptions": {
-    "target": "es5",
-    "module": "esnext",
-    "baseUrl": "./",
-    "moduleResolution": "node",
+    "target": "ESNext",
+    "module": "ESNext",
+    "moduleResolution": "bundler",
+    "baseUrl": ".",
     "paths": {
-      "@/*": [
-        "src/*"
-      ]
+      "@/*": ["./src/*"]
     },
     "lib": [
-      "esnext",
-      "dom",
-      "dom.iterable",
-      "scripthost"
-    ]
-  }
+      "ESNext",
+      "DOM",
+      "DOM.Iterable"
+    ],
+    "allowJs": true,
+    "checkJs": false,
+    "skipLibCheck": true,
+    "ignoreDeprecations": "6.0"
+  },
+  "include": ["src/**/*.js", "src/**/*.vue", "src/**/*.d.ts"]
 }

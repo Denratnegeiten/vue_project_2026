@@ -14,12 +14,14 @@
             :rules="[v => !!v || 'Title is required']"
           ></v-text-field>
 
-          <v-text-field
-            label="Image URL"
-            name="imageSrc"
-            type="text"
-            v-model="imageSrc"
-          ></v-text-field>
+          <v-file-input
+            label="Choose an image"
+            v-model="imageFile"
+            accept="image/*"
+            prepend-icon="mdi-camera"
+            required
+            :rules="[v => !!v || 'Image is required']"
+          ></v-file-input>
 
           <v-textarea
             name="description"
@@ -33,7 +35,7 @@
 
           <v-btn
             :loading="loading"
-            :disabled="!valid || loading"
+            :disabled="!valid || !imageFile || loading"
             color="primary"
             @click="createAd"
           >
@@ -52,7 +54,7 @@ export default {
       valid: false,
       title: "",
       description: "",
-      imageSrc: "",
+      imageFile: null,
       promo: false
     }
   },
@@ -63,19 +65,19 @@ export default {
   },
   methods: {
     createAd () {
-      if (this.$refs.form.validate()) {
-        const ad = {
-          title: this.title,
-          desc: this.description,
-          promo: this.promo,
-          src: this.imageSrc || "https://picsum.photos/400/300"
-        }
-
-        this.$store.dispatch("createAd", ad)
+      if (this.$refs.form.validate() && this.imageFile) {
+        const formData = new FormData()
+        formData.append('title', this.title)
+        formData.append('description', this.description)
+        formData.append('promo', this.promo)
+        formData.append('image', this.imageFile)
+        this.$store.dispatch("createAd", formData)
           .then(() => {
             this.$router.push("/ads")
           })
-          .catch(() => {})
+          .catch(err => {
+            console.error("Ошибка при создании объявления:", err)
+          })
       }
     }
   }

@@ -22,7 +22,8 @@ export default {
       commit('setLoading', true)
       
       try {
-        const response = await axios.post('http://176.12.68.14:3000/api/auth/register', {
+        // ИЗМЕНЕНО
+        const response = await axios.post('http://localhost:3000/api/auth/register', {
           email,
           password
         })
@@ -43,7 +44,8 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
-        const response = await axios.post('http://176.12.68.14:3000/api/auth/login', {
+        // ИЗМЕНЕНО
+        const response = await axios.post('http://localhost:3000/api/auth/login', {
           email,
           password
         })

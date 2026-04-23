@@ -13,7 +13,6 @@ class Ad {
 
 export default {
   state: {
-    // Твои изначальные 4 карточки
     ads: [
       {
         title: "First",
@@ -21,7 +20,7 @@ export default {
         ownerId: "user-123",
         src: "https://cdn.vuetifyjs.com/images/carousel/squirrel.jpg",
         promo: true,
-        id: "1"
+        id: "static-1"
       },
       {
         title: "Second",
@@ -29,7 +28,7 @@ export default {
         ownerId: "user-123",
         src: "https://cdn.vuetifyjs.com/images/carousel/sky.jpg",
         promo: true,
-        id: "2"
+        id: "static-2"
       },
       {
         title: "Third",
@@ -37,7 +36,7 @@ export default {
         ownerId: "user-456",
         src: "https://cdn.vuetifyjs.com/images/carousel/bird.jpg",
         promo: true,
-        id: "3"
+        id: "static-3"
       },
       {
         title: "Fourth",
@@ -45,7 +44,7 @@ export default {
         ownerId: "user-456",
         src: "https://cdn.vuetifyjs.com/images/carousel/planet.jpg",
         promo: true,
-        id: "4"
+        id: "static-4"
       }
     ]
   },
@@ -54,7 +53,7 @@ export default {
       state.ads.push(payload)
     },
     loadAds (state, payload) {
-      // Хитрость: фильтруем, чтобы не добавить дубликаты, если вызываем несколько раз
+      // Это сработает идеально: статика останется, новые добавятся
       const newAds = payload.filter(postAd => !state.ads.find(stateAd => stateAd.id === postAd.id))
       state.ads = [...state.ads, ...newAds]
     },
@@ -71,16 +70,25 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
-        const response = await axios.get('http://176.12.68.14:3000/api/ads')
-        // Превращаем данные из БД в формат твоего приложения
-        const adsFromDb = response.data.map(ad => new Ad(
-          ad.title, 
-          ad.description, 
-          ad.ownerId, 
-          ad.imageSrc, 
-          ad.promo, 
-          ad.id
-        ))
+        // ИЗМЕНЕНО: теперь стучимся на локальный бэкенд
+        const response = await axios.get('http://localhost:3000/api/ads')
+        
+        const adsFromDb = response.data.map(ad => {
+          // ИЗМЕНЕНО: пути картинок строим от локального бэкенда
+          const imagePath = (ad.imageSrc && ad.imageSrc.startsWith('/uploads'))
+            ? `http://localhost:3000${ad.imageSrc}`
+            : (ad.imageSrc || 'https://picsum.photos/400/300')
+
+          return new Ad(
+            ad.title, 
+            ad.description, 
+            ad.ownerId, 
+            imagePath, 
+            ad.promo === 1 || ad.promo === true,
+            ad.id
+          )
+        })
+
         commit('loadAds', adsFromDb)
         commit('setLoading', false)
       } catch (error) {
@@ -92,23 +100,22 @@ export default {
       commit('clearError')
       commit('setLoading', true)
       try {
-        const newAdForDb = {
-          title: payload.title,
-          description: payload.desc,
-          ownerId: getters.user.id,
-          imageSrc: payload.src,
-          promo: payload.promo
-        }
+        payload.append('ownerId', getters.user.id)
 
-        const response = await axios.post('http://176.12.68.14:3000/api/ads', newAdForDb)
+        // ИЗМЕНЕНО: отправляем данные на локальный бэкенд
+        const response = await axios.post('http://localhost:3000/api/ads', payload, {
+          headers: {
+            'Content-Type': 'multipart/form-data'
+          }
+        })
         
-        // Создаем локальный объект с ID, который выдала MySQL
         const finalAd = new Ad(
-          payload.title,
-          payload.desc,
+          payload.get('title'),
+          payload.get('description'),
           getters.user.id,
-          payload.src,
-          payload.promo,
+          // ИЗМЕНЕНО: путь картинки от локального бэкенда
+          `http://localhost:3000${response.data.imageSrc}`,
+          payload.get('promo') === 'true',
           response.data.id
         )
 
